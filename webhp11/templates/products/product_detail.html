@@ -1,0 +1,82 @@
+{% extends "layout.html" %} 
+{% load humanize %}
+{% block content %}
+    <div class="container mt-5">
+        <div class="row bg-white">
+            <div class="col-md-5">
+              <img src="{{ product.image.url }}" alt="" style="width: 350px; height: 550px;">
+
+            </div>
+            <div class="col-md-7">
+                <h1>{{ product.name}}</h1>
+                <h5 class="card-title text-danger">{{ product.price |floatformat | intcomma }} VND</h5>
+                <p class="">{{ product.detail }}</p>
+            </div>
+        </div>
+        <div class="row my-5 bg-white">
+            <div class="col-md-12">
+                {{c.content}}
+                {{c.user.username}}
+
+              
+              <div class="d-flex justify-content-between my-5">  
+                <h3>Comments</h3>  
+                {% if request.user.is_authenticated %}  
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#reviewModal">Write comment</button>  
+                {% else %}  
+                <p>You need to <a href="{% url 'signin' %}">login</a> to leave a comment.</p>  
+                {% endif %}  
+              </div>
+              <div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="reviewModalLabel">Leave A Review</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form  method="POST">
+                      {% csrf_token %}
+                      <div class="modal-body">
+                        {{form.content}}                    
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Publish comment</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+              {% if comments %}
+              <div class="mt-3">  
+                <div class="d-flex row">  
+                  <div class="col-md-10">  
+                    <div class="d-flex flex-column comment-section">  
+                      {% for c in comments %}  
+                        <div class="bg-white p-2">  
+                          <div class="d-flex gap-2 user-info">  
+                            <img class="rounded-circle" src="https://cdn-icons-png.flaticon.com/512/6858/6858504.png" width="50">  
+                            <div class="d-flex flex-column justify-content-start ml-2">  
+                              <span class="d-block font-weight-bold name">{{ c.user.username }}</span>  
+                              <span class="date text-black-50">{{ c.created_at }}</span>  
+                            </div>  
+                          </div>  
+                          <div class="mt-2">  
+                            <p class="comment-text">{{ c.content }}</p>  
+                          </div>  
+                        </div>  
+                      {% endfor %} 
+                    </div>  
+                  </div>   
+                </div>  
+              </div> 
+              {% else %}
+              <div class="mt-3 ps-3">  
+                <i><p>No comments yet.</p></i>  
+              </div>  
+              {% endif %}
+            </div>
+          </div>
+    </div>
+    
+{% endblock content %}

@@ -1,0 +1,48 @@
+{% extends "layout.html" %} 
+{% load humanize %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <!-- Cột dành cho danh mục sản phẩm -->
+        <div style="width: 18rem;" class="mt-5 col-3">
+            <ul class="list-group">
+                {% for loaiSP in categories %}
+                <a href="{% url "product_category" loaiSP.id %}">
+                    <li class="list-group-item">{{ loaiSP.name }}</li> 
+                </a>                
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- Cột dành cho danh sách sản phẩm -->
+        <div class="col-9 mt-5">
+            <div class="row">
+                {% if query %}
+                <p class="">Kết quả tìm kiếm cho : <b>{{ query }}</b></p>
+                {% endif %}
+                
+                {% if products %}
+                {% for sanpham in products %} 
+                    <div class="col-md-4 mb-4">
+                        <div class="card" style="width: 18rem;">
+                            <a href="{% url "product_detail" sanpham.id %}">
+                                <img src="{{ sanpham.image.url }}" class="card-img-top product-image" alt="" style="width: 285px; height: 410px; object-fit: cover;">
+                            </a>
+                            <div class="card-body">
+                                <h5 class="card-title">{{ sanpham.name }}</h5>
+                                <h5 class="card-title text-danger">{{ sanpham.price |floatformat | intcomma }} VND</h5>
+                                <p class="">{{ sanpham.detail }}</p>
+
+                                <a href="#" class="btn btn-primary">Add to cart</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                {% else%}
+                    <p >No product found</p>
+                {%endif%}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
