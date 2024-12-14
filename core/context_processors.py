@@ -1,4 +1,4 @@
-from products.models import Category, Product 
+from products.models import Category, Product, Brand
 
 def categories(request):
     return{
@@ -8,4 +8,8 @@ def categories(request):
 def products(request):
     return{
         "productsContext" : Product.objects.all()
+    }
+def brands(request):
+    return{
+        "brandsContext" : Brand.objects.all()
     }

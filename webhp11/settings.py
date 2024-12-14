@@ -70,6 +70,8 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'core.context_processors.categories',
                 'core.context_processors.products',
+                'core.context_processors.brands',
+
 
             ],
         },
@@ -112,7 +114,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'vi-VN'
 
 TIME_ZONE = 'Asia/Bangkok'
 

@@ -2,47 +2,107 @@
 {% load humanize %}
 {% block content %}
 <div class="container">
-    <div class="row">
-        <!-- Cột dành cho danh mục sản phẩm -->
-        <div style="width: 18rem;" class="mt-5 col-3">
-            <ul class="list-group">
-                {% for loaiSP in categories %}
-                <a href="{% url "product_category" loaiSP.id %}">
-                    <li class="list-group-item">{{ loaiSP.name }}</li> 
-                </a>                
-                {% endfor %}
-            </ul>
+    <div class="row mt-5">
+        <div style="width: 18rem;" class="col-3">
+            <form action="{% url "filter" %}" method="GET">
+            
+                {% comment %} category {% endcomment %}
+                <div class="card" >
+                    <div class="card-header">
+                    <b>All Categories</b>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        {% for loaiSP in categoriesContext  %}
+                        <li class="list-group-item">
+                            <input type="radio" name="category" value="{{ loaiSP.id }}"> <span class="ms-1">{{ loaiSP.name }}</span>
+                        </li>
+                        {% endfor %}
+                    
+                    </ul>
+                </div>
+
+                {% comment %} brand {% endcomment %}
+                <div class="card mt-3" >
+                    <div class="card-header">
+                    <b>All Brands</b>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        {% for b in brandsContext  %}
+                        <li class="list-group-item">
+                            <input type="checkbox" name="brand" value="{{ b.id }}"> <span class="ms-1">{{ b.name }}</span>
+                        </li>
+                        {% endfor %}
+                    
+                    </ul>
+                </div>
+
+                {% comment %} on sale {% endcomment %}
+                <div class="card mt-3" >
+                    <div class="card-header">
+                    <b>Services & Promotions</b>
+                    </div>
+                    <ul class="list-group list-group-flush">                    
+                        <li class="list-group-item">
+                            <input name="on_sale" type="checkbox"> <span class="ms-1">On sale</span>
+                        </li>                
+                    </ul>
+                </div>
+
+                {% comment %} price range {% endcomment %}
+                <div class="card mt-3" >
+                    <div class="card-header">
+                    <b>Price</b>
+                    </div>
+                    <ul class="list-group list-group-flush">                    
+                        <li class="list-group-item d-flex gap-3">
+                            <input type="number" name="min_price" min="0" max="100000000" placeholder="from" class="form-control">
+                            <input type="number" name="max_price" min="0" max="100000000" placeholder="to" class="form-control">
+                        </li>                
+                    </ul>
+                </div>
+
+                <div class="mt-3">
+                    <button type="submit" class="w-100 btn btn-primary">Apply</button>
+                    <button class="w-100 btn btn-outline-secondary mt-2">Clear all</button>
+                </div>
+            
+            </form>
         </div>
+        
 
         <!-- Cột dành cho danh sách sản phẩm -->
-        <div class="col-9 mt-5">
-            <div class="row">
+        <main class="col-8">
+            
                 {% if query %}
                 <p class="">Kết quả tìm kiếm cho : <b>{{ query }}</b></p>
                 {% endif %}
-                
                 {% if products %}
+                <div class="row">
                 {% for sanpham in products %} 
-                    <div class="col-md-4 mb-4">
-                        <div class="card" style="width: 18rem;">
-                            <a href="{% url "product_detail" sanpham.id %}">
-                                <img src="{{ sanpham.image.url }}" class="card-img-top product-image" alt="" style="width: 285px; height: 410px; object-fit: cover;">
-                            </a>
-                            <div class="card-body">
-                                <h5 class="card-title">{{ sanpham.name }}</h5>
-                                <h5 class="card-title text-danger">{{ sanpham.price |floatformat | intcomma }} VND</h5>
-                                <p class="">{{ sanpham.detail }}</p>
-
-                                <a href="#" class="btn btn-primary">Add to cart</a>
-                            </div>
+                <div class="col-4">
+                    <div class="card" style="width: 18rem;">
+                        <a class="position-relative" href="{% url "product_detail" sanpham.id %}">                                
+                        <img src="{{ sanpham.image.url }}" class="card-img-top" alt="...">
+                        
+                        </a>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ sanpham.name }}</h5>
+                            {% if sanpham.on_sale %}
+                            <p class="card-title text-secondary fs-6 text-decoration-line-through">{{ sanpham.price | floatformat | intcomma }}đ</p>
+                            <h5 class="card-title text-danger">{{ sanpham.new_price | floatformat | intcomma }}đ</h5>
+                            {% else %}
+                            <h5 class="card-title text-danger">{{ sanpham.price | floatformat | intcomma }}đ</h5>
+                            {% endif %}
+                            <a href="#" class="btn btn-primary">Add to cart</a>                            
                         </div>
                     </div>
+                </div>
                 {% endfor %}
                 {% else%}
                     <p >No product found</p>
                 {%endif%}
             </div>
-        </div>
+        </main>
     </div>
 </div>
 {% endblock content %}
